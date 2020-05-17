@@ -1,5 +1,5 @@
 {
-    "name": "amirhwsin/jStorage",
+    "name": "amirhwsin/jstorage",
     "description": "Light non-framework JSON-BASED storage.",
     "require": {
         "php": "^7.1"
