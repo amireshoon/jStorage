@@ -13,7 +13,7 @@ jStorage is JSON-BASED small key value storage for more porductive.
 Install using composer:
 
 ```php
-$ composer require amirhwsin/jstorage
+$ composer require amirhwsin/jstorage:dev-master
 ```
 it's highly recommended installing using composer but if you need other way to go you can download project from git or simply clone it.
 ```sh
