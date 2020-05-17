@@ -1,7 +1,23 @@
 {
     "name": "amirhwsin/jstorage",
     "description": "Light non-framework JSON-BASED storage.",
+    "keywords": [
+        "json-storage",
+        "json-db",
+        "jstorage",
+        "json-based-storage"
+    ],
+    "homepage": "https://github.com/amireshoon/jStorage",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Amirhossein Meydani",
+            "email": "amirhwsin@outlook.com",
+            "homepage": "https://github.com/amireshoon"
+        }
+    ],
     "require": {
         "php": "^7.1"
-    }
+    },
+    "minimum-stability": "stable"
 }
