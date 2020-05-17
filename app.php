@@ -14,3 +14,12 @@ $jStorage = new jStorage\App('storage2/main.json', __DIR__ .  '/.gitignore');
 // $jStorage = new jStorage\App('storage2/main.json', false);
 
 // $jStorage->get();
+
+// $jStorage->add('amir',[
+//     'password' => 'JG^RWY',
+//     'first_last_name' => 'Amirhossein Meydani'
+// ]);
+
+// $jStorage->commit();
+
+$jStorage->update('username','ali');

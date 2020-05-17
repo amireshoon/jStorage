@@ -2,12 +2,19 @@
 
 namespace jStorage;
 
+define('jSTORAGE_VERSION', '1.0.0');
+
 class App {
     
     /**
      * @var Storage
      */
     protected $storage;
+
+    /**
+     * @var Path
+     */
+    protected $path;
 
     /**
      * Initialize storage
@@ -25,9 +32,10 @@ class App {
                 if(strpos($exploded[$i],'.json')) {
                     $content = array();
                     $fp = fopen($path, "wb");
-                    fwrite($fp, \json_encode($content));
+                    fwrite($fp, json_encode($content));
                     fclose($fp);
-                    $this->storage = file_get_contents($path);
+                    $this->storage = json_decode(file_get_contents($path));
+                    $this->path = $path;
                 }else {
                     if( is_dir($exploded[$i]) === false ) {
                         mkdir($exploded[$i]);
@@ -35,13 +43,13 @@ class App {
                 }
             }
         }else {
-            $this->storage = file_get_contents($path);
+            $this->storage = json_decode(file_get_contents($path));
+            $this->path = $path;
         }
 
         if(!is_bool($gitignore)) {
             $ignores = file_get_contents($gitignore);
             if(!strstr($ignores, $path)) {
-                echo ' has not';
                 $fp = fopen($gitignore, "wb");
                 $ignores .= $path . "\r\n";
                 fwrite($fp, $ignores);
@@ -51,12 +59,48 @@ class App {
 
     }
 
-    public function add() {
-
+    public function commit() {
+        $fp = fopen($this->path, "wb");
+        fwrite($fp, json_encode($this->storage));
+        fclose($fp);
+        $this->storage = json_decode(file_get_contents($this->path));
     }
 
-    public function update() {
+    public function add($key, $value) {
+        $jStorageKey = hash('crc32', $key . \implode(" ",$value), false);
+        if($this->is_key_exists($jStorageKey)) {
+            return $this->jStorageRespose(
+                [
+                    'error' => false,
+                    'message' => 'this data and value was inserted before.',
+                    'jStorageKey' => $jStorageKey
+                ]
+            );
+        }else {
+            $this->storage[] = [
+                'jStorage_key' => $jStorageKey,
+                'jStorage_value' => [
+                    'key' => $key,
+                    'value' => $value
+                ]
+            ];
+            return $this->jStorageRespose(
+                [
+                    'error' => false,
+                    'jStorageKey' => $jStorageKey
+                ]
+            );
+        }
+    }
 
+    public function update($key, $value) {
+        for($i = 0; $i <= sizeof($this->storage) - 1 ;$i++) {
+            $child = $this->storage[$i];
+            $childData = $child->jStorage_value;
+            if($childData->key == $key) {
+                $this->storage[$i]->jStorage_value->value = $value;
+            }
+        }
     }
 
     public function remove() {
@@ -67,4 +111,26 @@ class App {
         
     }
 
+    private function is_key_exists($jStorageKey) {
+        for($i = 0; $i <= sizeof($this->storage) - 1;$i++) {
+            $child = $this->storage[$i];
+            if($child->jStorage_key == $jStorageKey) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function jStorageRespose(...$response) {
+        $message = array();
+        foreach($response as $msg) {
+            $message[] = $msg;
+        }
+        $message[] = [
+            'jStorageVersion' => jSTORAGE_VERSION,
+            'jStoragePath' => $this->path,
+            'jStorageSize' => filesize($this->path) . '/bytes'
+        ];
+        return json_encode($message);
+    }
 }
