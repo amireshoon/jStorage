@@ -99,16 +99,58 @@ class App {
             $childData = $child->jStorage_value;
             if($childData->key == $key) {
                 $this->storage[$i]->jStorage_value->value = $value;
+                return $this->jStorageRespose(
+                        [
+                            'error' => false,
+                            'message' => 'value updated.'
+                        ]
+                    );
             }
         }
+        return $this->jStorageRespose(
+                [
+                    'error' => false,
+                    'message' => 'key not founded.'
+                ]
+            );
     }
 
-    public function remove() {
-
+    public function remove($key) {
+        for($i = 0; $i <= sizeof($this->storage) - 1 ;$i++) {
+            $child = $this->storage[$i];
+            $childData = $child->jStorage_value;
+            if($childData->key == $key) {
+                unset($this->storage[$i]);
+                return $this->jStorageRespose(
+                        [
+                            'error' => false,
+                            'message' => 'key removed.'
+                        ]
+                    );
+            }
+        }
+        return $this->jStorageRespose(
+            [
+                'error' => false,
+                'message' => 'key not found.'
+            ]
+        );
     }
 
-    public function get() {
-        
+    public function get($key) {
+        for($i = 0; $i <= sizeof($this->storage) - 1 ;$i++) {
+            $child = $this->storage[$i];
+            $childData = $child->jStorage_value;
+            if($childData->key == $key) {
+                return $this->jStorageRespose(
+                        [
+                            'error' => false,
+                            'message' => 'data received.'
+                        ],
+                        $childData
+                    );
+            }
+        }
     }
 
     private function is_key_exists($jStorageKey) {

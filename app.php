@@ -22,4 +22,8 @@ $jStorage = new jStorage\App('storage2/main.json', __DIR__ .  '/.gitignore');
 
 // $jStorage->commit();
 
-$jStorage->update('username','ali');
+// $jStorage->update('username','ali');
+
+// $jStorage->remove('username');
+
+// print_r($jStorage->get('amir'));
