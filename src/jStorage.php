@@ -91,13 +91,7 @@ class App {
     public function add($key, $value) {
         $jStorageKey = hash('crc32', $key . \implode(" ",$value), false);
         if($this->is_key_exists($jStorageKey)) {
-            return $this->jStorageRespose(
-                [
-                    'error' => false,
-                    'message' => 'this data and value was inserted before.',
-                    'jStorageKey' => $jStorageKey
-                ]
-            );
+            $this->update($key, $value);
         }else {
             $this->storage[] = [
                 'jStorage_key' => $jStorageKey,
