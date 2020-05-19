@@ -91,7 +91,17 @@ class App {
     public function add($key, $value) {
         $jStorageKey = hash('crc32', $key . \implode(" ",$value), false);
         if($this->is_key_exists($jStorageKey)) {
-            $this->update($key, $value);
+            if($this->is_user_key_exists($key)) {
+                $this->update($key, $value);
+            }else {
+                return $this->jStorageRespose(
+                    [
+                        'error' => false,
+                        'message' => 'this data and value was inserted before.',
+                        'jStorageKey' => $jStorageKey
+                    ]
+                );
+            }
         }else {
             $this->storage[] = [
                 'jStorage_key' => $jStorageKey,
@@ -213,6 +223,21 @@ class App {
             }
         }
         return false;
+    }
+
+    /**
+     * This function search in users key for matching key.
+     * 
+     * @param   string  key
+     * @return  bool
+     */
+    public function is_user_key_exists($key) {
+        $vl = json_decode($this->get($key));
+        if($vl[0]->message == 'data not found.') {
+            return false;
+        }else {
+            return true;
+        }
     }
 
     /**
